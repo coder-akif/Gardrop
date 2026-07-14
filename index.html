@@ -58,13 +58,24 @@
 
   *{ box-sizing: border-box; }
   html,body{ margin:0; padding:0; }
+  html{ overflow-x:hidden; width:100%; }
   body{
     background: var(--bg);
     color: var(--text);
     font-family: var(--font-body);
     min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    width: 100%;
     transition: background 0.25s ease, color 0.25s ease;
     -webkit-font-smoothing: antialiased;
+  }
+  body.no-scroll{
+    /* Modal açıkken arka plan sayfasının kaymasını/scroll olmasını engeller */
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    overflow: hidden;
   }
   @media (prefers-reduced-motion: reduce){
     *{ transition: none !important; animation: none !important; }
@@ -174,8 +185,11 @@
     display:flex;
     gap:10px;
     overflow-x:auto;
+    overflow-y:hidden;
+    max-width:100%;
     padding-top: 14px;
     scrollbar-width:none;
+    -webkit-overflow-scrolling: touch;
   }
   .tabs::-webkit-scrollbar{ display:none; }
   .tab{
@@ -322,6 +336,53 @@
     margin: 0 0 10px;
   }
 
+  /* ---------- KART ÜSTÜ 3 NOKTA MENÜSÜ (düzenle/sil) ---------- */
+  .card-menu-btn{
+    position:absolute;
+    top:8px; right:8px;
+    width:26px; height:26px;
+    border-radius:50%;
+    border:1px solid var(--surface-2);
+    background: color-mix(in srgb, var(--surface) 88%, transparent);
+    backdrop-filter: blur(2px);
+    color: var(--text);
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px;
+    line-height:1;
+    cursor:pointer;
+    z-index:3;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+  }
+  .card-menu{
+    position:absolute;
+    top:38px; right:8px;
+    z-index:6;
+    min-width:132px;
+    background: var(--surface);
+    border:1px solid var(--surface-2);
+    border-radius:10px;
+    box-shadow: var(--shadow-card);
+    overflow:hidden;
+    display:none;
+  }
+  .card-menu.open{ display:block; }
+  .card-menu button{
+    display:flex; align-items:center; gap:8px;
+    width:100%;
+    padding:9px 12px;
+    background:none;
+    border:none;
+    border-bottom:1px solid var(--surface-2);
+    text-align:left;
+    font-family: var(--font-body);
+    font-size:12.5px;
+    color: var(--text);
+    cursor:pointer;
+  }
+  .card-menu button:last-child{ border-bottom:none; }
+  .card-menu button:hover{ background: var(--surface-2); }
+  .card-menu button.danger{ color: var(--rust); }
+
   .status-row{
     display:flex;
     gap:5px;
@@ -394,7 +455,9 @@
     width:100%;
     max-width: 480px;
     max-height: 92vh;
+    max-height: 92dvh;
     overflow-y:auto;
+    -webkit-overflow-scrolling: touch;
     background: var(--surface);
     border-radius: 18px 18px 0 0;
     padding: 22px 18px 24px;
@@ -469,6 +532,7 @@
     border-color: var(--brass);
     color: var(--ink);
   }
+  .segmented button.segmented-wide{ grid-column: 1 / -1; }
 
   .photo-drop{
     display:flex; align-items:center; gap:12px;
@@ -639,6 +703,7 @@
             <button type="button" data-category="alt_giyim">👖 Alt Giyim</button>
             <button type="button" data-category="ayakkabi">👟 Ayakkabı</button>
             <button type="button" data-category="dis_giyim">🧥 Dış Giyim</button>
+            <button type="button" class="segmented-wide" data-category="kislik">🧣 Kışlık</button>
           </div>
         </div>
 
@@ -663,6 +728,54 @@
         <div class="modal-actions">
           <button type="button" class="btn btn-ghost" id="cancelAddBtn">Vazgeç</button>
           <button type="submit" class="btn btn-primary" id="submitAddBtn">Kaydet</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- KIYAFET DÜZENLEME MODALI -->
+  <div class="modal-overlay" id="editModalOverlay">
+    <div class="modal-box">
+      <div class="modal-title">✏️ Kıyafeti Düzenle</div>
+      <form id="editClothForm">
+        <input type="hidden" id="editItemId">
+        <div class="field-group">
+          <label class="field-label" for="fieldNameEdit">İsim</label>
+          <input class="text-input" id="fieldNameEdit" name="name" type="text" placeholder="örn. Gri Sweatshirt" required>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Kategori</label>
+          <div class="segmented" id="categorySegmentedEdit">
+            <button type="button" data-category="ust_giyim">👕 Üst Giyim</button>
+            <button type="button" data-category="alt_giyim">👖 Alt Giyim</button>
+            <button type="button" data-category="ayakkabi">👟 Ayakkabı</button>
+            <button type="button" data-category="dis_giyim">🧥 Dış Giyim</button>
+            <button type="button" class="segmented-wide" data-category="kislik">🧣 Kışlık</button>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="fieldSubtypeEdit">Tür (opsiyonel)</label>
+          <input class="text-input" id="fieldSubtypeEdit" name="subtype" type="text" placeholder="örn. Tshirt, Şort, Pantolon">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Fotoğraf (opsiyonel)</label>
+          <label class="photo-drop" for="fieldPhotoEdit">
+            <span class="thumb" id="photoThumbEdit">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h3l2-3h6l2 3h3v13H4V7Z"/><circle cx="12" cy="13" r="3.2"/></svg>
+            </span>
+            <span class="drop-text" id="photoDropTextEdit">Değiştirmek için dokun</span>
+          </label>
+          <input type="file" id="fieldPhotoEdit" name="photo" accept="image/*" style="display:none">
+        </div>
+
+        <p class="form-note" id="formNoteEdit">Değişiklikler kaydedilince tüm cihazlarda güncellenecek.</p>
+
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="cancelEditBtn">Vazgeç</button>
+          <button type="submit" class="btn btn-primary" id="submitEditBtn">Kaydet</button>
         </div>
       </form>
     </div>
@@ -743,15 +856,18 @@ function showSetupInfo(){
     body.innerHTML = `<p style="margin-top:0">Şu an mock (geçici) veriyle çalışıyorsun — eklediklerin sayfa yenilenince kaybolur. Kalıcı kayıt için:</p>${setupSteps}`;
   }
   document.getElementById('setupModalOverlay').classList.add('open');
+  markOverlayOpen('setup');
 }
 
 document.getElementById('connLabel').addEventListener('click', showSetupInfo);
 document.getElementById('setupCloseBtn').addEventListener('click', () => {
   document.getElementById('setupModalOverlay').classList.remove('open');
+  markOverlayClosed('setup');
 });
 document.getElementById('setupModalOverlay').addEventListener('click', (e) => {
   if(e.target === document.getElementById('setupModalOverlay')){
     document.getElementById('setupModalOverlay').classList.remove('open');
+    markOverlayClosed('setup');
   }
 });
 
@@ -782,6 +898,17 @@ async function testSupabaseConnection(){
 const sunIcon = `<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>`;
 const moonIcon = `<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/>`;
 
+/* Modal açıkken arka plan sayfasının kaymasını/scroll olmasını engelleyen yardımcılar */
+const openOverlays = new Set();
+function markOverlayOpen(id){
+  openOverlays.add(id);
+  document.body.classList.add('no-scroll');
+}
+function markOverlayClosed(id){
+  openOverlays.delete(id);
+  if(openOverlays.size === 0) document.body.classList.remove('no-scroll');
+}
+
 const root = document.documentElement;
 const themeIcon = document.getElementById('themeIcon');
 let currentTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
@@ -801,10 +928,11 @@ const categoryIcons = {
   ust_giyim: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 3l4 2 4-2 4 4-3 3v11H7V10L4 7l4-4Z"/></svg>`,
   alt_giyim: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3h12l1 8-3 10h-3l-1-9-1 9H8L5 11 6 3Z"/></svg>`,
   ayakkabi:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 17c0-2 2-3 4-4l6-4 2 2c2 1 6 1 6 4v2H3v-0Z"/></svg>`,
-  dis_giyim: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3l5 2 5-2 3 5-3 2v11H7V10L4 8l3-5Z"/></svg>`
+  dis_giyim: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3l5 2 5-2 3 5-3 2v11H7V10L4 8l3-5Z"/></svg>`,
+  kislik:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2v3M9 3.5l3 1.5 3-1.5M5 10c1-1.5 2.5-2 4-1.5M19 10c-1-1.5-2.5-2-4-1.5M6 9c0 5 1 9-1 12M18 9c0 5-1 9 1 12M9 8.5c0 4 .5 8-1 12.5M15 8.5c0 4-.5 8 1 12.5"/></svg>`
 };
 const categoryLabels = {
-  ust_giyim: 'Üst Giyim', alt_giyim: 'Alt Giyim', ayakkabi: 'Ayakkabı', dis_giyim: 'Dış Giyim'
+  ust_giyim: 'Üst Giyim', alt_giyim: 'Alt Giyim', ayakkabi: 'Ayakkabı', dis_giyim: 'Dış Giyim', kislik: 'Kışlık'
 };
 
 const mockClothesFallback = [
@@ -828,6 +956,11 @@ function renderCard(item){
   `).join('');
   return `
     <div class="card" data-id="${item.id}" data-status="${item.status}" data-category="${item.category}">
+      <button type="button" class="card-menu-btn" data-menu-toggle="${item.id}" aria-haspopup="true" aria-label="Kıyafet seçenekleri">⋮</button>
+      <div class="card-menu" data-menu="${item.id}">
+        <button type="button" data-action="edit" data-id="${item.id}">✏️ Düzenle</button>
+        <button type="button" class="danger" data-action="delete" data-id="${item.id}">🗑️ Sil</button>
+      </div>
       <div class="card-photo">${photo}</div>
       <p class="card-name">${item.name}</p>
       <p class="card-cat">${categoryLabels[item.category] || ''}</p>
@@ -959,7 +1092,12 @@ document.getElementById('tabs').addEventListener('click', (e) => {
   });
   tab.classList.add('active');
   tab.setAttribute('aria-selected', 'true');
-  tab.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  // NOT: tab.scrollIntoView() bazı mobil tarayıcılarda tüm sayfayı dikeyde
+  // kaydırıp "görüntü kayması" hissi yaratıyordu. Bunun yerine SADECE
+  // sekme çubuğunun kendi içinde yatay kaydırma yapıyoruz.
+  const tabsContainer = document.getElementById('tabs');
+  const targetLeft = tab.offsetLeft - (tabsContainer.clientWidth - tab.clientWidth) / 2;
+  tabsContainer.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
   renderGrid(tab.dataset.filter);
 });
 
@@ -1033,16 +1171,19 @@ function showComboResult(){
     }</div>`;
   }
   document.getElementById('comboModalOverlay').classList.add('open');
+  markOverlayOpen('combo');
 }
 
 document.getElementById('comboBtn').addEventListener('click', showComboResult);
 document.getElementById('comboRegenBtn').addEventListener('click', showComboResult);
 document.getElementById('comboCloseBtn').addEventListener('click', () => {
   document.getElementById('comboModalOverlay').classList.remove('open');
+  markOverlayClosed('combo');
 });
 document.getElementById('comboModalOverlay').addEventListener('click', (e) => {
   if(e.target === document.getElementById('comboModalOverlay')){
     document.getElementById('comboModalOverlay').classList.remove('open');
+    markOverlayClosed('combo');
   }
 });
 
@@ -1072,9 +1213,11 @@ function showToast(msg, isError = false){
 
 function openModal(){
   overlay.classList.add('open');
+  markOverlayOpen('add');
 }
 function closeModal(){
   overlay.classList.remove('open');
+  markOverlayClosed('add');
   addForm.reset();
   selectedCategory = null;
   selectedPhotoFile = null;
@@ -1160,6 +1303,199 @@ addForm.addEventListener('submit', async (e) => {
   }finally{
     submitBtn.disabled = false;
     submitBtn.textContent = 'Kaydet';
+  }
+});
+
+/* ============================================================
+   3 NOKTA MENÜSÜ — Düzenle / Sil
+   ============================================================ */
+function closeAllCardMenus(){
+  document.querySelectorAll('.card-menu.open').forEach(m => m.classList.remove('open'));
+}
+
+document.getElementById('clothesGrid').addEventListener('click', async (e) => {
+  const toggleBtn = e.target.closest('[data-menu-toggle]');
+  if(toggleBtn){
+    const id = toggleBtn.dataset.menuToggle;
+    const menu = document.querySelector(`.card-menu[data-menu="${id}"]`);
+    const wasOpen = menu && menu.classList.contains('open');
+    closeAllCardMenus();
+    if(menu && !wasOpen) menu.classList.add('open');
+    return;
+  }
+
+  const actionBtn = e.target.closest('[data-action]');
+  if(actionBtn){
+    closeAllCardMenus();
+    const id = actionBtn.dataset.id;
+    const item = mockClothes.find(c => String(c.id) === String(id));
+    if(!item) return;
+
+    if(actionBtn.dataset.action === 'edit'){
+      openEditModal(item);
+    } else if(actionBtn.dataset.action === 'delete'){
+      const confirmed = window.confirm(`"${item.name}" silinsin mi? Bu işlem geri alınamaz.`);
+      if(!confirmed) return;
+      await deleteCloth(item);
+    }
+  }
+});
+
+// Menü dışına tıklayınca kapat
+document.addEventListener('click', (e) => {
+  if(!e.target.closest('.card-menu') && !e.target.closest('[data-menu-toggle]')){
+    closeAllCardMenus();
+  }
+});
+
+async function deleteCloth(item){
+  const prevList = mockClothes.slice();
+  mockClothes = mockClothes.filter(c => c.id !== item.id);
+  renderGrid();
+
+  if(!dbConnected){
+    showToast('⚠️ Supabase bağlı değil, silme işlemi geçici.', true);
+    return;
+  }
+  try{
+    const { error } = await supabaseClient.from('clothes').delete().eq('id', item.id);
+    if(error) throw error;
+    showToast('🗑️ Kıyafet silindi.');
+  }catch(err){
+    console.error('Silinirken hata:', err);
+    mockClothes = prevList;
+    renderGrid();
+    showToast('⚠️ Silinemedi: ' + err.message, true);
+  }
+}
+
+/* ============================================================
+   DÜZENLEME MODALI
+   ============================================================ */
+const editOverlay        = document.getElementById('editModalOverlay');
+const editForm            = document.getElementById('editClothForm');
+const editItemIdField      = document.getElementById('editItemId');
+const fieldNameEdit        = document.getElementById('fieldNameEdit');
+const fieldSubtypeEdit     = document.getElementById('fieldSubtypeEdit');
+const fieldPhotoEdit       = document.getElementById('fieldPhotoEdit');
+const photoThumbEdit       = document.getElementById('photoThumbEdit');
+const photoDropTextEdit    = document.getElementById('photoDropTextEdit');
+const formNoteEdit         = document.getElementById('formNoteEdit');
+const submitEditBtn        = document.getElementById('submitEditBtn');
+const categorySegEdit      = document.getElementById('categorySegmentedEdit');
+
+let editSelectedCategory = null;
+let editSelectedPhotoFile = null;
+const emptyThumbEditSvg = photoThumbEdit.innerHTML;
+
+function openEditModal(item){
+  editItemIdField.value = item.id;
+  fieldNameEdit.value = item.name || '';
+  fieldSubtypeEdit.value = item.subtype || '';
+  editSelectedCategory = item.category || null;
+  editSelectedPhotoFile = null;
+  formNoteEdit.textContent = 'Değişiklikler kaydedilince tüm cihazlarda güncellenecek.';
+  formNoteEdit.classList.remove('error');
+
+  document.querySelectorAll('#categorySegmentedEdit button').forEach(b => {
+    b.classList.toggle('is-active', b.dataset.category === item.category);
+  });
+
+  if(item.image_url){
+    photoThumbEdit.innerHTML = `<img src="${item.image_url}" alt="önizleme">`;
+    photoDropTextEdit.textContent = 'Değiştirmek için dokun';
+  } else {
+    photoThumbEdit.innerHTML = emptyThumbEditSvg;
+    photoDropTextEdit.textContent = 'Fotoğraf eklemek için dokun';
+  }
+
+  editOverlay.classList.add('open');
+  markOverlayOpen('edit');
+}
+
+function closeEditModal(){
+  editOverlay.classList.remove('open');
+  markOverlayClosed('edit');
+}
+
+document.getElementById('cancelEditBtn').addEventListener('click', closeEditModal);
+editOverlay.addEventListener('click', (e) => { if(e.target === editOverlay) closeEditModal(); });
+
+categorySegEdit.addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  editSelectedCategory = btn.dataset.category;
+  document.querySelectorAll('#categorySegmentedEdit button').forEach(b => b.classList.remove('is-active'));
+  btn.classList.add('is-active');
+});
+
+fieldPhotoEdit.addEventListener('change', () => {
+  const file = fieldPhotoEdit.files && fieldPhotoEdit.files[0];
+  if(!file) return;
+  editSelectedPhotoFile = file;
+  const url = URL.createObjectURL(file);
+  photoThumbEdit.innerHTML = `<img src="${url}" alt="önizleme">`;
+  photoDropTextEdit.textContent = file.name;
+});
+
+editForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = editItemIdField.value;
+  const item = mockClothes.find(c => String(c.id) === String(id));
+  if(!item) return;
+
+  const name = fieldNameEdit.value.trim();
+  if(!name || !editSelectedCategory){
+    formNoteEdit.textContent = 'Lütfen isim gir ve bir kategori seç.';
+    formNoteEdit.classList.add('error');
+    return;
+  }
+  formNoteEdit.classList.remove('error');
+  submitEditBtn.disabled = true;
+  submitEditBtn.textContent = 'Kaydediliyor...';
+  const subtype = fieldSubtypeEdit.value.trim() || null;
+  let imageUrl = item.image_url || null;
+
+  try{
+    if(dbConnected){
+      if(editSelectedPhotoFile){
+        const ext = editSelectedPhotoFile.name.split('.').pop();
+        const path = `${crypto.randomUUID()}.${ext}`;
+        const { error: uploadError } = await supabaseClient
+          .storage
+          .from('clothes-images')
+          .upload(path, editSelectedPhotoFile);
+        if(uploadError) throw uploadError;
+        const { data: pub } = supabaseClient.storage.from('clothes-images').getPublicUrl(path);
+        imageUrl = pub.publicUrl;
+      }
+      const { data, error } = await supabaseClient
+        .from('clothes')
+        .update({ name, category: editSelectedCategory, subtype, image_url: imageUrl })
+        .eq('id', id)
+        .select()
+        .single();
+      if(error) throw error;
+      const idx = mockClothes.findIndex(c => String(c.id) === String(id));
+      if(idx !== -1) mockClothes[idx] = data;
+      showToast('✅ Değişiklikler kaydedildi.');
+    } else {
+      if(editSelectedPhotoFile){ imageUrl = URL.createObjectURL(editSelectedPhotoFile); }
+      const idx = mockClothes.findIndex(c => String(c.id) === String(id));
+      if(idx !== -1){
+        mockClothes[idx] = { ...mockClothes[idx], name, category: editSelectedCategory, subtype, image_url: imageUrl };
+      }
+      showToast('⚠️ Supabase bağlı değil, değişiklik geçici.', true);
+    }
+    renderGrid();
+    closeEditModal();
+  }catch(err){
+    console.error('Düzenlenirken hata:', err);
+    formNoteEdit.textContent = 'Kaydedilemedi: ' + err.message;
+    formNoteEdit.classList.add('error');
+  }finally{
+    submitEditBtn.disabled = false;
+    submitEditBtn.textContent = 'Kaydet';
   }
 });
 </script>

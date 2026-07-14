@@ -8,7 +8,7 @@
 create table if not exists public.clothes (
   id          uuid primary key default gen_random_uuid(),
   name        text not null,
-  category    text not null check (category in ('ust_giyim','alt_giyim','ayakkabi','dis_giyim')),
+  category    text not null check (category in ('ust_giyim','alt_giyim','ayakkabi','dis_giyim','kislik')),
   subtype     text,
   image_url   text,
   status      text not null default 'dolapta' check (status in ('dolapta','kirlide','makinede')),
@@ -94,3 +94,12 @@ drop policy if exists "clothes_images_delete" on storage.objects;
 create policy "clothes_images_delete"
   on storage.objects for delete
   using (bucket_id = 'clothes-images');
+
+-- ============================================================
+-- 6) ZATEN KURULU BİR TABLON VARSA (bu dosyayı daha önce çalıştırdıysan):
+-- Sadece "Kışlık" kategorisini eklemek için bu iki satırı ayrıca
+-- çalıştırman yeterli, yukarıdaki her şeyi tekrar çalıştırmana gerek yok.
+-- ============================================================
+alter table public.clothes drop constraint if exists clothes_category_check;
+alter table public.clothes add constraint clothes_category_check
+  check (category in ('ust_giyim','alt_giyim','ayakkabi','dis_giyim','kislik'));
