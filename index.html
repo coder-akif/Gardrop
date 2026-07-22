@@ -804,12 +804,14 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">Renk (opsiyonel — kombin önerisi için kullanılır)</label>
+          <label class="field-label" id="colorFieldLabel">Renk (opsiyonel — kombin önerisi için kullanılır)</label>
           <div class="color-picker" id="colorPicker">
             <button type="button" class="color-swatch color-none is-active" data-color="" aria-label="Renk seçme" title="Belirtme">✕</button>
             <button type="button" class="color-swatch" data-color="siyah" style="background:#222" aria-label="Siyah" title="Siyah"></button>
-            <button type="button" class="color-swatch" data-color="beyaz" style="background:#fafafa" aria-label="Beyaz" title="Beyaz"></button>
+            <button type="button" class="color-swatch" data-color="beyaz" style="background:#fafafa; border-color:#ccc" aria-label="Beyaz" title="Beyaz"></button>
             <button type="button" class="color-swatch" data-color="gri" style="background:#9e9e9e" aria-label="Gri" title="Gri"></button>
+            <button type="button" class="color-swatch" data-color="bej" style="background:#d9c9a3" aria-label="Bej" title="Bej"></button>
+            <button type="button" class="color-swatch" data-color="krem" style="background:#f3e9d2; border-color:#e0d3ad" aria-label="Krem" title="Krem"></button>
             <button type="button" class="color-swatch" data-color="lacivert" style="background:#1f3a5f" aria-label="Lacivert" title="Lacivert"></button>
             <button type="button" class="color-swatch" data-color="mavi" style="background:#3b6ea5" aria-label="Mavi" title="Mavi"></button>
             <button type="button" class="color-swatch" data-color="kirmizi" style="background:#c0392b" aria-label="Kırmızı" title="Kırmızı"></button>
@@ -820,7 +822,6 @@
             <button type="button" class="color-swatch" data-color="turuncu" style="background:#d97a3c" aria-label="Turuncu" title="Turuncu"></button>
             <button type="button" class="color-swatch" data-color="bordo" style="background:#722f37" aria-label="Bordo" title="Bordo"></button>
             <button type="button" class="color-swatch" data-color="kahverengi" style="background:#6b4423" aria-label="Kahverengi" title="Kahverengi"></button>
-            <button type="button" class="color-swatch" data-color="bej" style="background:#d9c9a3" aria-label="Bej" title="Bej"></button>
             <button type="button" class="color-swatch" data-color="haki" style="background:#7d7c4a" aria-label="Haki" title="Haki"></button>
           </div>
         </div>
@@ -874,12 +875,14 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">Renk (opsiyonel — kombin önerisi için kullanılır)</label>
+          <label class="field-label" id="colorFieldLabelEdit">Renk (opsiyonel — kombin önerisi için kullanılır)</label>
           <div class="color-picker" id="colorPickerEdit">
             <button type="button" class="color-swatch color-none is-active" data-color="" aria-label="Renk seçme" title="Belirtme">✕</button>
             <button type="button" class="color-swatch" data-color="siyah" style="background:#222" aria-label="Siyah" title="Siyah"></button>
-            <button type="button" class="color-swatch" data-color="beyaz" style="background:#fafafa" aria-label="Beyaz" title="Beyaz"></button>
+            <button type="button" class="color-swatch" data-color="beyaz" style="background:#fafafa; border-color:#ccc" aria-label="Beyaz" title="Beyaz"></button>
             <button type="button" class="color-swatch" data-color="gri" style="background:#9e9e9e" aria-label="Gri" title="Gri"></button>
+            <button type="button" class="color-swatch" data-color="bej" style="background:#d9c9a3" aria-label="Bej" title="Bej"></button>
+            <button type="button" class="color-swatch" data-color="krem" style="background:#f3e9d2; border-color:#e0d3ad" aria-label="Krem" title="Krem"></button>
             <button type="button" class="color-swatch" data-color="lacivert" style="background:#1f3a5f" aria-label="Lacivert" title="Lacivert"></button>
             <button type="button" class="color-swatch" data-color="mavi" style="background:#3b6ea5" aria-label="Mavi" title="Mavi"></button>
             <button type="button" class="color-swatch" data-color="kirmizi" style="background:#c0392b" aria-label="Kırmızı" title="Kırmızı"></button>
@@ -890,7 +893,6 @@
             <button type="button" class="color-swatch" data-color="turuncu" style="background:#d97a3c" aria-label="Turuncu" title="Turuncu"></button>
             <button type="button" class="color-swatch" data-color="bordo" style="background:#722f37" aria-label="Bordo" title="Bordo"></button>
             <button type="button" class="color-swatch" data-color="kahverengi" style="background:#6b4423" aria-label="Kahverengi" title="Kahverengi"></button>
-            <button type="button" class="color-swatch" data-color="bej" style="background:#d9c9a3" aria-label="Bej" title="Bej"></button>
             <button type="button" class="color-swatch" data-color="haki" style="background:#7d7c4a" aria-label="Haki" title="Haki"></button>
           </div>
         </div>
@@ -1330,6 +1332,18 @@ const colorKeywords = {
   turuncu:'turuncu', bordo:'bordo', haki:'haki', krem:'bej',
   gold:'sari', altin:'sari', 'altın':'sari', gumus:'gri', 'gümüş':'gri',
 };
+const colorDisplayNames = {
+  siyah:'Siyah', beyaz:'Beyaz', gri:'Gri', bej:'Bej', krem:'Krem',
+  lacivert:'Lacivert', mavi:'Mavi', kirmizi:'Kırmızı', yesil:'Yeşil',
+  sari:'Sarı', mor:'Mor', pembe:'Pembe', turuncu:'Turuncu',
+  bordo:'Bordo', kahverengi:'Kahverengi', haki:'Haki',
+};
+function colorFieldLabelText(colorKey){
+  const base = 'Renk (opsiyonel — kombin önerisi için kullanılır)';
+  if(!colorKey) return base;
+  const displayName = colorDisplayNames[colorKey] || colorKey;
+  return `${base} — Seçili: ${displayName}`;
+}
 const neutralColors = new Set(['siyah','beyaz','gri','lacivert','bej','kahverengi','haki']);
 const clashPairs = [
   ['kirmizi','yesil'], ['mor','sari'], ['pembe','turuncu'],
@@ -1472,6 +1486,7 @@ const formNote      = document.getElementById('formNote');
 const submitBtn     = document.getElementById('submitAddBtn');
 const categorySeg   = document.getElementById('categorySegmented');
 const colorSeg      = document.getElementById('colorPicker');
+const colorLabelEl  = document.getElementById('colorFieldLabel');
 const toastEl       = document.getElementById('toast');
 
 let selectedCategory = null;
@@ -1505,6 +1520,7 @@ function closeModal(){
   document.querySelectorAll('#categorySegmented button').forEach(b => b.classList.remove('is-active'));
   document.querySelectorAll('#colorPicker .color-swatch').forEach(b => b.classList.remove('is-active'));
   document.querySelector('#colorPicker .color-none').classList.add('is-active');
+  colorLabelEl.textContent = colorFieldLabelText(null);
 }
 
 document.getElementById('addBtn').addEventListener('click', openModal);
@@ -1525,6 +1541,7 @@ colorSeg.addEventListener('click', (e) => {
   selectedColor = btn.dataset.color || null;
   document.querySelectorAll('#colorPicker .color-swatch').forEach(b => b.classList.remove('is-active'));
   btn.classList.add('is-active');
+  colorLabelEl.textContent = colorFieldLabelText(selectedColor);
 });
 
 fieldPhoto.addEventListener('change', () => {
@@ -1671,6 +1688,7 @@ const formNoteEdit         = document.getElementById('formNoteEdit');
 const submitEditBtn        = document.getElementById('submitEditBtn');
 const categorySegEdit      = document.getElementById('categorySegmentedEdit');
 const colorSegEdit         = document.getElementById('colorPickerEdit');
+const colorLabelElEdit     = document.getElementById('colorFieldLabelEdit');
 
 let editSelectedCategory = null;
 let editSelectedColor = null;
@@ -1695,6 +1713,7 @@ function openEditModal(item){
     const isMatch = (b.dataset.color || null) === (item.color || null);
     b.classList.toggle('is-active', isMatch);
   });
+  colorLabelElEdit.textContent = colorFieldLabelText(item.color || null);
 
   if(item.image_url){
     photoThumbEdit.innerHTML = `<img src="${item.image_url}" alt="önizleme">`;
@@ -1730,6 +1749,7 @@ colorSegEdit.addEventListener('click', (e) => {
   editSelectedColor = btn.dataset.color || null;
   document.querySelectorAll('#colorPickerEdit .color-swatch').forEach(b => b.classList.remove('is-active'));
   btn.classList.add('is-active');
+  colorLabelElEdit.textContent = colorFieldLabelText(editSelectedColor);
 });
 
 fieldPhotoEdit.addEventListener('change', () => {
