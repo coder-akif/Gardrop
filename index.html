@@ -1386,6 +1386,8 @@ function scoreOutfit(outfit){
   return score;
 }
 
+let lastOutfitKey = null;
+
 function generateOutfit(){
   const clean = mockClothes.filter(c => c.status === 'dolapta');
   const tops    = clean.filter(c => c.category === 'ust_giyim');
@@ -1411,11 +1413,20 @@ function generateOutfit(){
       .map(p => p ? p.id : 'x').join('|');
     if(seen.has(key)) continue;
     seen.add(key);
-    candidates.push({ outfit, score: scoreOutfit(outfit) });
+    candidates.push({ outfit, score: scoreOutfit(outfit), key });
   }
   candidates.sort((a, b) => b.score - a.score);
-  const topSlice = candidates.slice(0, Math.min(3, candidates.length));
-  const chosen = pickRandom(topSlice) || candidates[0];
+
+  // Aynı kombin arka arkaya tekrar etmesin — başka bir seçenek varsa öncekini ele.
+  let pool = candidates;
+  if(candidates.length > 1 && lastOutfitKey){
+    const withoutLast = candidates.filter(c => c.key !== lastOutfitKey);
+    if(withoutLast.length > 0) pool = withoutLast;
+  }
+
+  const topSlice = pool.slice(0, Math.min(3, pool.length));
+  const chosen = pickRandom(topSlice) || pool[0];
+  lastOutfitKey = chosen.key;
 
   return { ok:true, outfit: chosen.outfit, smart: chosen.score > 0 };
 }
