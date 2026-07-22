@@ -318,46 +318,8 @@
     margin-bottom:10px;
     overflow:hidden;
   }
-  .card-photo img{ width:100%; height:100%; object-fit:cover; cursor:zoom-in; }
+  .card-photo img{ width:100%; height:100%; object-fit:cover; }
   .card-photo svg{ width:34px; height:34px; color: var(--muted); }
-
-  /* ---------- LIGHTBOX (resme tıklayınca büyütme) ---------- */
-  .lightbox-overlay{
-    position: fixed; inset: 0;
-    background: rgba(10,8,6,0.85);
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index: 200;
-    padding: 24px;
-    cursor:zoom-out;
-  }
-  .lightbox-overlay.open{ display:flex; }
-  .lightbox-overlay img{
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 12px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-    cursor: default;
-    animation: lightbox-in .18s ease;
-  }
-  @keyframes lightbox-in{
-    from{ opacity:0; transform: scale(0.94); }
-    to{ opacity:1; transform: scale(1); }
-  }
-  .lightbox-close{
-    position: fixed;
-    top: 18px; right: 18px;
-    width:42px; height:42px;
-    border-radius: var(--radius-pill);
-    border: 1px solid rgba(255,255,255,0.25);
-    background: rgba(0,0,0,0.35);
-    color: #fff;
-    font-size: 20px;
-    line-height:1;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer;
-  }
 
   .card-name{
     font-weight:700;
@@ -660,7 +622,7 @@
     overflow:hidden;
     margin-bottom:8px;
   }
-  .combo-photo img{ width:100%; height:100%; object-fit:cover; cursor:zoom-in; }
+  .combo-photo img{ width:100%; height:100%; object-fit:cover; }
   .combo-photo svg{ width:28px; height:28px; color: var(--muted); }
   .combo-label{
     font-family: var(--font-display);
@@ -1149,48 +1111,6 @@ document.getElementById('clothesGrid').addEventListener('click', (e) => {
   updateClothStatus(item.id, newState);
 });
 
-/* ============================================================
-   LIGHTBOX — resme tıklayınca büyütme
-   ============================================================ */
-const lightboxOverlay = document.getElementById('lightboxOverlay');
-const lightboxImg     = document.getElementById('lightboxImg');
-
-function openLightbox(src, alt){
-  if(!src) return;
-  lightboxImg.src = src;
-  lightboxImg.alt = alt || '';
-  lightboxOverlay.classList.add('open');
-  markOverlayOpen('lightbox');
-}
-
-function closeLightbox(){
-  lightboxOverlay.classList.remove('open');
-  markOverlayClosed('lightbox');
-  lightboxImg.src = '';
-}
-
-document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
-lightboxOverlay.addEventListener('click', (e) => {
-  if(e.target === lightboxOverlay) closeLightbox();
-});
-document.addEventListener('keydown', (e) => {
-  if(e.key === 'Escape' && lightboxOverlay.classList.contains('open')) closeLightbox();
-});
-
-// Dolap kartlarındaki fotoğraflara tıklanınca büyüt
-document.getElementById('clothesGrid').addEventListener('click', (e) => {
-  const img = e.target.closest('.card-photo img');
-  if(!img) return;
-  openLightbox(img.src, img.alt);
-});
-
-// Kombin önerisi kartlarındaki fotoğraflara tıklanınca büyüt
-document.getElementById('comboModalOverlay').addEventListener('click', (e) => {
-  const img = e.target.closest('.combo-item img');
-  if(!img) return;
-  openLightbox(img.src, img.alt);
-});
-
 function pickRandom(arr){
   return arr.length ? arr[Math.floor(Math.random() * arr.length)] : null;
 }
@@ -1579,11 +1499,5 @@ editForm.addEventListener('submit', async (e) => {
   }
 });
 </script>
-
-<!-- LIGHTBOX: resme tıklayınca büyütmek için -->
-<div class="lightbox-overlay" id="lightboxOverlay">
-  <button type="button" class="lightbox-close" id="lightboxClose" aria-label="Kapat">✕</button>
-  <img id="lightboxImg" src="" alt="Büyütülmüş fotoğraf">
-</div>
 </body>
 </html>
