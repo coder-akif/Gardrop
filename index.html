@@ -317,19 +317,10 @@
     display:flex; align-items:center; justify-content:center;
     margin-bottom:10px;
     overflow:hidden;
-    position: relative;
-    z-index: 1;
     cursor: zoom-in;
-    transition: transform .25s ease, box-shadow .25s ease, z-index .25s ease;
   }
   .card-photo img{ width:100%; height:100%; object-fit:cover; }
   .card-photo svg{ width:34px; height:34px; color: var(--muted); }
-  .card-photo.is-zoomed{
-    transform: scale(1.8);
-    z-index: 5;
-    cursor: zoom-out;
-    box-shadow: var(--shadow-card);
-  }
 
   .card-name{
     font-weight:700;
@@ -392,6 +383,59 @@
   .card-menu button:last-child{ border-bottom:none; }
   .card-menu button:hover{ background: var(--surface-2); }
   .card-menu button.danger{ color: var(--rust); }
+
+  /* ---------- FOTOĞRAF LIGHTBOX (tam ekran görünüm) ---------- */
+  .lightbox-overlay{
+    position: fixed; inset: 0;
+    z-index: 200;
+    background: rgba(10,10,9,0.94);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    animation: lb-fade 0.2s ease;
+  }
+  .lightbox-overlay.open{ display: flex; }
+  @keyframes lb-fade{ from{ opacity:0; } to{ opacity:1; } }
+  .lightbox-overlay img{
+    max-width: 90vw;
+    max-height: 86vh;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .lightbox-close{
+    position: absolute;
+    top: 24px; right: 24px;
+    width: 44px; height: 44px;
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 50%;
+    background: transparent;
+    color: #fff;
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .lightbox-close:hover{ background: rgba(255,255,255,0.1); border-color: #fff; }
+  .lightbox-caption{
+    position: absolute;
+    bottom: 28px; left: 50%;
+    transform: translateX(-50%);
+    color: rgba(255,255,255,0.75);
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    text-align: center;
+    max-width: 80vw;
+  }
+  @media (max-width: 768px){
+    .lightbox-overlay{ padding: 16px; }
+    .lightbox-close{ top: 14px; right: 14px; width: 38px; height: 38px; font-size: 1.1rem; }
+    .lightbox-caption{ font-size: 0.7rem; bottom: 14px; }
+  }
 
   .status-row{
     display:flex;
@@ -791,6 +835,13 @@
     </div>
   </div>
 
+  <!-- FOTOĞRAF LIGHTBOX: karta tıklayınca tam ekran görünüm -->
+  <div class="lightbox-overlay" id="photoLightbox">
+    <button type="button" class="lightbox-close" id="lightboxCloseBtn" aria-label="Kapat">✕</button>
+    <img id="lightboxImg" src="" alt="">
+    <p class="lightbox-caption" id="lightboxCaption"></p>
+  </div>
+
   <!-- ADIM 6: Günün Kombini Sonuç Modalı -->
   <div class="modal-overlay" id="comboModalOverlay">
     <div class="modal-box combo-box">
@@ -1119,6 +1170,46 @@ document.getElementById('clothesGrid').addEventListener('click', (e) => {
   const item = mockClothes.find(c => String(c.id) === String(rawId));
   if(!item) return;
   updateClothStatus(item.id, newState);
+});
+
+/* ============================================================
+   FOTOĞRAF LIGHTBOX — karta tıklayınca tam ekran açılır
+   ============================================================ */
+const photoLightbox   = document.getElementById('photoLightbox');
+const lightboxImg     = document.getElementById('lightboxImg');
+const lightboxCaption = document.getElementById('lightboxCaption');
+
+function openLightbox(item){
+  if(!item.image_url) return;
+  lightboxImg.src = item.image_url;
+  lightboxImg.alt = item.name || '';
+  lightboxCaption.textContent = item.name || '';
+  photoLightbox.classList.add('open');
+  markOverlayOpen('lightbox');
+}
+
+function closeLightbox(){
+  photoLightbox.classList.remove('open');
+  markOverlayClosed('lightbox');
+  lightboxImg.src = '';
+}
+
+document.getElementById('clothesGrid').addEventListener('click', (e) => {
+  const photo = e.target.closest('.card-photo');
+  if(!photo) return;
+  const card = photo.closest('.card');
+  if(!card) return;
+  const item = mockClothes.find(c => String(c.id) === String(card.dataset.id));
+  if(!item) return;
+  openLightbox(item);
+});
+
+document.getElementById('lightboxCloseBtn').addEventListener('click', closeLightbox);
+photoLightbox.addEventListener('click', (e) => {
+  if(e.target === photoLightbox) closeLightbox();
+});
+document.addEventListener('keydown', (e) => {
+  if(e.key === 'Escape' && photoLightbox.classList.contains('open')) closeLightbox();
 });
 
 /* ============================================================
