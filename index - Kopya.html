@@ -317,19 +317,9 @@
     display:flex; align-items:center; justify-content:center;
     margin-bottom:10px;
     overflow:hidden;
-    position: relative;
-    z-index: 1;
-    cursor: zoom-in;
-    transition: transform .25s ease, box-shadow .25s ease, z-index .25s ease;
   }
   .card-photo img{ width:100%; height:100%; object-fit:cover; }
   .card-photo svg{ width:34px; height:34px; color: var(--muted); }
-  .card-photo.is-zoomed{
-    transform: scale(1.8);
-    z-index: 5;
-    cursor: zoom-out;
-    box-shadow: var(--shadow-card);
-  }
 
   .card-name{
     font-weight:700;
@@ -1119,25 +1109,6 @@ document.getElementById('clothesGrid').addEventListener('click', (e) => {
   const item = mockClothes.find(c => String(c.id) === String(rawId));
   if(!item) return;
   updateClothStatus(item.id, newState);
-});
-
-/* ============================================================
-   RESİM KARTINA TIKLAYINCA BÜYÜT/KÜÇÜLT
-   ============================================================ */
-document.getElementById('clothesGrid').addEventListener('click', (e) => {
-  const photo = e.target.closest('.card-photo');
-  if(!photo) return;
-  const wasZoomed = photo.classList.contains('is-zoomed');
-  document.querySelectorAll('.card-photo.is-zoomed').forEach(p => {
-    if(p !== photo) p.classList.remove('is-zoomed');
-  });
-  photo.classList.toggle('is-zoomed', !wasZoomed);
-});
-
-document.addEventListener('click', (e) => {
-  if(!e.target.closest('.card-photo')){
-    document.querySelectorAll('.card-photo.is-zoomed').forEach(p => p.classList.remove('is-zoomed'));
-  }
 });
 
 function pickRandom(arr){
