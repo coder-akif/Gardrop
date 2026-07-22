@@ -588,43 +588,6 @@
   }
   .segmented button.segmented-wide{ grid-column: 1 / -1; }
 
-  /* ---------- RENK SEÇİCİ (kombin renk uyumu için) ---------- */
-  .color-picker{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-  }
-  .color-swatch{
-    width:32px; height:32px;
-    border-radius:50%;
-    border:2px solid var(--surface-2);
-    cursor:pointer;
-    padding:0;
-    position:relative;
-    box-shadow: inset 0 0 0 2px var(--surface);
-    transition: transform .12s ease, border-color .12s ease;
-  }
-  .color-swatch:hover{ transform: scale(1.08); }
-  .color-swatch.is-active{
-    border-color: var(--brass);
-  }
-  .color-swatch.is-active::after{
-    content:"✓";
-    position:absolute; inset:0;
-    display:flex; align-items:center; justify-content:center;
-    font-size:14px; font-weight:700;
-    color:#fff;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
-  }
-  .color-swatch.color-none{
-    background: var(--bg);
-    display:flex; align-items:center; justify-content:center;
-    color: var(--muted);
-    font-size:15px;
-  }
-  .color-swatch.color-none.is-active::after{ content:""; }
-  .color-swatch.color-none.is-active{ color: var(--brass); }
-
   .photo-drop{
     display:flex; align-items:center; gap:12px;
     border: 1px dashed var(--surface-2);
@@ -804,28 +767,6 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label">Renk (opsiyonel — kombin önerisi için kullanılır)</label>
-          <div class="color-picker" id="colorPicker">
-            <button type="button" class="color-swatch color-none is-active" data-color="" aria-label="Renk seçme" title="Belirtme">✕</button>
-            <button type="button" class="color-swatch" data-color="siyah" style="background:#222" aria-label="Siyah" title="Siyah"></button>
-            <button type="button" class="color-swatch" data-color="beyaz" style="background:#fafafa" aria-label="Beyaz" title="Beyaz"></button>
-            <button type="button" class="color-swatch" data-color="gri" style="background:#9e9e9e" aria-label="Gri" title="Gri"></button>
-            <button type="button" class="color-swatch" data-color="lacivert" style="background:#1f3a5f" aria-label="Lacivert" title="Lacivert"></button>
-            <button type="button" class="color-swatch" data-color="mavi" style="background:#3b6ea5" aria-label="Mavi" title="Mavi"></button>
-            <button type="button" class="color-swatch" data-color="kirmizi" style="background:#c0392b" aria-label="Kırmızı" title="Kırmızı"></button>
-            <button type="button" class="color-swatch" data-color="yesil" style="background:#4f7942" aria-label="Yeşil" title="Yeşil"></button>
-            <button type="button" class="color-swatch" data-color="sari" style="background:#e0b93c" aria-label="Sarı" title="Sarı"></button>
-            <button type="button" class="color-swatch" data-color="mor" style="background:#7d5ba6" aria-label="Mor" title="Mor"></button>
-            <button type="button" class="color-swatch" data-color="pembe" style="background:#e08ab0" aria-label="Pembe" title="Pembe"></button>
-            <button type="button" class="color-swatch" data-color="turuncu" style="background:#d97a3c" aria-label="Turuncu" title="Turuncu"></button>
-            <button type="button" class="color-swatch" data-color="bordo" style="background:#722f37" aria-label="Bordo" title="Bordo"></button>
-            <button type="button" class="color-swatch" data-color="kahverengi" style="background:#6b4423" aria-label="Kahverengi" title="Kahverengi"></button>
-            <button type="button" class="color-swatch" data-color="bej" style="background:#d9c9a3" aria-label="Bej" title="Bej"></button>
-            <button type="button" class="color-swatch" data-color="haki" style="background:#7d7c4a" aria-label="Haki" title="Haki"></button>
-          </div>
-        </div>
-
-        <div class="field-group">
           <label class="field-label">Fotoğraf (opsiyonel)</label>
           <label class="photo-drop" for="fieldPhoto">
             <span class="thumb" id="photoThumb">
@@ -871,28 +812,6 @@
         <div class="field-group">
           <label class="field-label" for="fieldSubtypeEdit">Tür (opsiyonel)</label>
           <input class="text-input" id="fieldSubtypeEdit" name="subtype" type="text" placeholder="örn. Tshirt, Şort, Pantolon">
-        </div>
-
-        <div class="field-group">
-          <label class="field-label">Renk (opsiyonel — kombin önerisi için kullanılır)</label>
-          <div class="color-picker" id="colorPickerEdit">
-            <button type="button" class="color-swatch color-none is-active" data-color="" aria-label="Renk seçme" title="Belirtme">✕</button>
-            <button type="button" class="color-swatch" data-color="siyah" style="background:#222" aria-label="Siyah" title="Siyah"></button>
-            <button type="button" class="color-swatch" data-color="beyaz" style="background:#fafafa" aria-label="Beyaz" title="Beyaz"></button>
-            <button type="button" class="color-swatch" data-color="gri" style="background:#9e9e9e" aria-label="Gri" title="Gri"></button>
-            <button type="button" class="color-swatch" data-color="lacivert" style="background:#1f3a5f" aria-label="Lacivert" title="Lacivert"></button>
-            <button type="button" class="color-swatch" data-color="mavi" style="background:#3b6ea5" aria-label="Mavi" title="Mavi"></button>
-            <button type="button" class="color-swatch" data-color="kirmizi" style="background:#c0392b" aria-label="Kırmızı" title="Kırmızı"></button>
-            <button type="button" class="color-swatch" data-color="yesil" style="background:#4f7942" aria-label="Yeşil" title="Yeşil"></button>
-            <button type="button" class="color-swatch" data-color="sari" style="background:#e0b93c" aria-label="Sarı" title="Sarı"></button>
-            <button type="button" class="color-swatch" data-color="mor" style="background:#7d5ba6" aria-label="Mor" title="Mor"></button>
-            <button type="button" class="color-swatch" data-color="pembe" style="background:#e08ab0" aria-label="Pembe" title="Pembe"></button>
-            <button type="button" class="color-swatch" data-color="turuncu" style="background:#d97a3c" aria-label="Turuncu" title="Turuncu"></button>
-            <button type="button" class="color-swatch" data-color="bordo" style="background:#722f37" aria-label="Bordo" title="Bordo"></button>
-            <button type="button" class="color-swatch" data-color="kahverengi" style="background:#6b4423" aria-label="Kahverengi" title="Kahverengi"></button>
-            <button type="button" class="color-swatch" data-color="bej" style="background:#d9c9a3" aria-label="Bej" title="Bej"></button>
-            <button type="button" class="color-swatch" data-color="haki" style="background:#7d7c4a" aria-label="Haki" title="Haki"></button>
-          </div>
         </div>
 
         <div class="field-group">
@@ -1341,8 +1260,6 @@ function isClash(a, b){
 
 function detectColor(item){
   if(!item) return null;
-  if(item.color && colorKeywords[item.color]) return colorKeywords[item.color];
-  if(item.color) return item.color; // zaten normalize edilmiş bir anahtar olabilir
   const text = `${item.name} ${item.subtype || ''}`.toLowerCase();
   for(const key in colorKeywords){
     if(text.includes(key)) return colorKeywords[key];
@@ -1471,11 +1388,9 @@ const photoDropText = document.getElementById('photoDropText');
 const formNote      = document.getElementById('formNote');
 const submitBtn     = document.getElementById('submitAddBtn');
 const categorySeg   = document.getElementById('categorySegmented');
-const colorSeg      = document.getElementById('colorPicker');
 const toastEl       = document.getElementById('toast');
 
 let selectedCategory = null;
-let selectedColor = null;
 let selectedPhotoFile = null;
 const emptyThumbSvg = photoThumb.innerHTML;
 
@@ -1496,15 +1411,12 @@ function closeModal(){
   markOverlayClosed('add');
   addForm.reset();
   selectedCategory = null;
-  selectedColor = null;
   selectedPhotoFile = null;
   photoThumb.innerHTML = emptyThumbSvg;
   photoDropText.textContent = 'Fotoğraf seçmek için dokun';
   formNote.textContent = 'Kaydedince kıyafet "Dolapta" durumuyla eklenecek.';
   formNote.classList.remove('error');
   document.querySelectorAll('#categorySegmented button').forEach(b => b.classList.remove('is-active'));
-  document.querySelectorAll('#colorPicker .color-swatch').forEach(b => b.classList.remove('is-active'));
-  document.querySelector('#colorPicker .color-none').classList.add('is-active');
 }
 
 document.getElementById('addBtn').addEventListener('click', openModal);
@@ -1516,14 +1428,6 @@ categorySeg.addEventListener('click', (e) => {
   if(!btn) return;
   selectedCategory = btn.dataset.category;
   document.querySelectorAll('#categorySegmented button').forEach(b => b.classList.remove('is-active'));
-  btn.classList.add('is-active');
-});
-
-colorSeg.addEventListener('click', (e) => {
-  const btn = e.target.closest('button');
-  if(!btn) return;
-  selectedColor = btn.dataset.color || null;
-  document.querySelectorAll('#colorPicker .color-swatch').forEach(b => b.classList.remove('is-active'));
   btn.classList.add('is-active');
 });
 
@@ -1565,7 +1469,7 @@ addForm.addEventListener('submit', async (e) => {
       }
       const { data, error } = await supabaseClient
         .from('clothes')
-        .insert({ name, category: selectedCategory, subtype, color: selectedColor, image_url: imageUrl, status: 'dolapta' })
+        .insert({ name, category: selectedCategory, subtype, image_url: imageUrl, status: 'dolapta' })
         .select()
         .single();
       if(error) throw error;
@@ -1575,7 +1479,7 @@ addForm.addEventListener('submit', async (e) => {
       if(selectedPhotoFile){ imageUrl = URL.createObjectURL(selectedPhotoFile); }
       const localItem = {
         id: Date.now(),
-        name, category: selectedCategory, subtype, color: selectedColor, image_url: imageUrl, status: 'dolapta'
+        name, category: selectedCategory, subtype, image_url: imageUrl, status: 'dolapta'
       };
       mockClothes.unshift(localItem);
       showToast('⚠️ Supabase bağlı değil, kıyafet sadece geçici olarak eklendi.', true);
@@ -1670,10 +1574,8 @@ const photoDropTextEdit    = document.getElementById('photoDropTextEdit');
 const formNoteEdit         = document.getElementById('formNoteEdit');
 const submitEditBtn        = document.getElementById('submitEditBtn');
 const categorySegEdit      = document.getElementById('categorySegmentedEdit');
-const colorSegEdit         = document.getElementById('colorPickerEdit');
 
 let editSelectedCategory = null;
-let editSelectedColor = null;
 let editSelectedPhotoFile = null;
 const emptyThumbEditSvg = photoThumbEdit.innerHTML;
 
@@ -1682,18 +1584,12 @@ function openEditModal(item){
   fieldNameEdit.value = item.name || '';
   fieldSubtypeEdit.value = item.subtype || '';
   editSelectedCategory = item.category || null;
-  editSelectedColor = item.color || null;
   editSelectedPhotoFile = null;
   formNoteEdit.textContent = 'Değişiklikler kaydedilince tüm cihazlarda güncellenecek.';
   formNoteEdit.classList.remove('error');
 
   document.querySelectorAll('#categorySegmentedEdit button').forEach(b => {
     b.classList.toggle('is-active', b.dataset.category === item.category);
-  });
-
-  document.querySelectorAll('#colorPickerEdit .color-swatch').forEach(b => {
-    const isMatch = (b.dataset.color || null) === (item.color || null);
-    b.classList.toggle('is-active', isMatch);
   });
 
   if(item.image_url){
@@ -1721,14 +1617,6 @@ categorySegEdit.addEventListener('click', (e) => {
   if(!btn) return;
   editSelectedCategory = btn.dataset.category;
   document.querySelectorAll('#categorySegmentedEdit button').forEach(b => b.classList.remove('is-active'));
-  btn.classList.add('is-active');
-});
-
-colorSegEdit.addEventListener('click', (e) => {
-  const btn = e.target.closest('button');
-  if(!btn) return;
-  editSelectedColor = btn.dataset.color || null;
-  document.querySelectorAll('#colorPickerEdit .color-swatch').forEach(b => b.classList.remove('is-active'));
   btn.classList.add('is-active');
 });
 
@@ -1774,7 +1662,7 @@ editForm.addEventListener('submit', async (e) => {
       }
       const { data, error } = await supabaseClient
         .from('clothes')
-        .update({ name, category: editSelectedCategory, subtype, color: editSelectedColor, image_url: imageUrl })
+        .update({ name, category: editSelectedCategory, subtype, image_url: imageUrl })
         .eq('id', id)
         .select()
         .single();
@@ -1786,7 +1674,7 @@ editForm.addEventListener('submit', async (e) => {
       if(editSelectedPhotoFile){ imageUrl = URL.createObjectURL(editSelectedPhotoFile); }
       const idx = mockClothes.findIndex(c => String(c.id) === String(id));
       if(idx !== -1){
-        mockClothes[idx] = { ...mockClothes[idx], name, category: editSelectedCategory, subtype, color: editSelectedColor, image_url: imageUrl };
+        mockClothes[idx] = { ...mockClothes[idx], name, category: editSelectedCategory, subtype, image_url: imageUrl };
       }
       showToast('⚠️ Supabase bağlı değil, değişiklik geçici.', true);
     }
